@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css">
+<script type="text/javascript" src="/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+<title>登录</title>
+</head>
+<body>
+
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" title="登录" style="width:400px">
+		<div style="padding:10px 60px 20px 60px">
+<form id="ff" action="/login"  method="post">
+	    		    <table cellpadding="5">
+	    		<tr>
+	    			<td>工号:</td>
+	    			<td><input class="easyui-textbox" type="text" name="dzycode" data-options="required:true"></td>
+	    		</tr>
+	    		<tr>
+	    			<td>密码:</td>
+	    			<td><input class="easyui-textbox" type="password" name="password" data-options="required:true"></td>
+	    		</tr>
+	    		     
+	    		<tr>
+	    		    <td></td>
+	    		    <td><input type="submit" class="easyui-linkbutton"  > <td>	
+	    		</tr>
+	    	</table>
+	    </form>
+	  
+	    </div>
+	</div>
+	<script>
+		function submitForm(){
+			$('#ff').form('submit');
+		}
+		function clearForm(){
+			$('#ff').form('clear');
+		}
+	</script>
+</body>
+</html>

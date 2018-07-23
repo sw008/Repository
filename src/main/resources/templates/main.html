@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>新增</title>
+<link rel="stylesheet" type="text/css" href="../static/js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../static/js/easyui/themes/icon.css">
+<script type="text/javascript" src="../static/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../static/js/easyui/easyloader.js"></script>
+<script type="text/javascript" src="../static/js/easyui/locale/easyui-lang-zh_CN.js"></script> 
+
+<!--
+<script type="text/javascript" src="../static/js/easyui/datagrid-filter.js"></script>
+-->
+</head>
+<body>
+<div>
+	<div class="easyui-panel" style="padding:5px;margin-bottom:5px;border:1px solid #ccc">
+		<a id="linkbutton_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save',onClick:save">提交</a>
+		<a id="linkbutton_add" href="#" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add',onClick:opMX">添加</a>
+        <a href="#" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-cut',onClick:deletehz">删除</a>
+	</div>
+	<div style="height:10px"></div>
+	<div>
+		
+		<div style="margin-bottom:10px">
+			<label style="width:20%;height:25px">备注</label >
+			<input id="beizhu" class="easyui-textbox" data-options="prompt:'填写备注...'" style="width:80%;height:25px">
+		</div>
+
+		
+	</div>
+	
+	<div style="width:auto;height:auto;float:left">
+		<table id="datagrid_hz" class="easyui-datagrid" title="汇总" style="width:300px;height:500px;float:left"
+			data-options="singleSelect:true,collapsible:true,onClickRow:onClickRow,striped:true,rownumbers:true,idField:'fdbs'">
+		<thead>
+			<tr>
+				<th data-options="field:'fdbs',width:80,editor:{type:'text',options:{editable:false}}">fdbs</th>
+				<th data-options="field:'brq',width:80,align:'center',editor:{type:'text',options:{editable:false}}">brq</th>
+				<th data-options="field:'erq',width:80,align:'center',editor:{type:'text',options:{editable:false}}">erq</th>
+			</tr>
+		</thead>
+	   </table>
+	</div>	
+		<div style="width:auto;height:auto">
+		<table id="datagrid_mx" class="easyui-datagrid" title="明细" style="width:600px;height:500px;float: right"
+			data-options="singleSelect:true,collapsible:true,striped:true,idField:'fdbs'">
+		<thead>
+			<tr>
+				<th data-options="field:'fdbs',width:80,editor:{type:'text',options:{editable:false}}">fdbs</th>
+				<th data-options="field:'itemid',width:80,editor:{type:'textbox',options:{editable:false}}">Item ID</th>
+				<th data-options="field:'productname',width:100,editor:{type:'textbox',options:{editable:false}}">ProductName</th>
+				<th data-options="field:'listprice',width:80,align:'right',editor:{type:'numberbox',options:{precision:1,editable:false}}">List Price</th>
+				<th data-options="field:'attr1',width:200,editor:{type:'textbox',options:{editable:false}}">Attribute</th>
+				<th data-options="field:'productid',width:100,editor:{type:'textbox',options:{editable:false}},hidden:true">productid</th>
+				<th data-options="field:'mx',width:100,editor:{type:'textbox',options:{editable:false}},hidden:true">mx</th>
+			</tr>
+		</thead>
+		</table>
+	
+	</div>
+	
+</div>
+
+<div id="dd" class="easyui-dialog" closed=true style="padding:5px;width:800px;height:500px;"
+			title="新增" iconCls="icon-ok" toolbar="#dlg-toolbar" modal=true>
+		<div>
+			<label>商场</label >
+            <input id="fdbs"  class="easyui-combobox" data-options="valueField:'id',textField:'text',url:'combobox_data1.json',
+					method:'get',">
+			<label>起始时间</label>
+			<input id="brq" class="easyui-datebox" style="width:100px"  data-options="editable:false">
+			<label>结束时间</label>
+			<input id="erq" class="easyui-datebox"   style="width:100px"  data-options="editable:false">
+		</div>
+		<div>
+		<table id="datagrid_dialog" class="easyui-datagrid"  style="width:100%;height:auto"
+			data-options="singleSelect:true,collapsible:true,onClickRow:onClickRow2">
+		<thead>
+			<tr>
+				<th data-options="field:'itemid',width:80">Item ID</th>				
+				<th data-options="field:'productname',width:100,
+					formatter:formattercolumn,
+					editor:{type:'text',options:{required:true}}">Product</th>
+				<th data-options="field:'listprice',width:80,align:'right',editor:{type:'numberbox',options:{precision:1,required:true}}">List Price</th>
+				<th data-options="field:'attr1',width:250,editor:'text'">Attribute</th>
+				<th data-options="field:'productid',width:100,editor:{type:'textbox',options:{required:true}},hidden:true">Productid</th>
+			</tr>
+		</thead>
+		</table>
+	
+	</div>
+</div>
+<div id="dlg-toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" data-options="onClick:mxSave">保存</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" >刷新</a>
+</div>
+
+<div id="dd1" class="easyui-dialog" closed=true style="padding:5px;width:200px;height:350px;"
+			title="选择商品" iconCls="icon-ok">
+
+		<div>
+		<table id="datagrid_dialogmx" class="easyui-datagrid"  style="width:100%;height:auto"
+			data-options="singleSelect:true,collapsible:true, url:'datagrid_data1.json',method:'get',onDblClickRow: onSpDblClickCell">
+		<thead>
+			<tr>
+				<th data-options="field:'productname',width:100">Product</th>
+				<th data-options="field:'productid',width:100,hidden:true">Productid</th>
+			</tr>
+		</thead>
+		</table>
+	
+	</div>
+</div>
+
+
+
+</body>
+<script>
+var fd_info=new Object();
+var editIndex = undefined;
+
+$(function(){
+    //$('#linkbutton_save').bind('click', selectFD);
+    //$('#linkbutton_add').bind('click', opMX);  	
+});
+
+function formattercolumn(value) {
+	//单元格 鼠标悬停 提示单元格的值
+         return "<span title='" + value + "'>" + value + "</span>";  
+    }
+
+function save(){
+	var dj_info=new Object();
+	var hzlist=$('#datagrid_hz').datagrid('getRows');
+	var mxlist=$('#datagrid_mx').datagrid('getRows');
+	
+	if ((hzlist.length>0)&&(mxlist.length>0)){
+		//console(hzlist);
+		//console(mxlist);
+		dj_info.beizhu=$('#beizhu').text();
+		dj_info.hzlist=hzlist;
+		dj_info.mxlist=mxlist;
+		console.log(dj_info);
+	}
+	
+	
+}
+
+function deletehz(){
+	var Row=$('#datagrid_hz').datagrid('getSelected');
+	var Rowindex=$('#datagrid_hz').datagrid('getRowIndex',Row);
+	console.log(Row);	
+	$('#datagrid_hz').datagrid('deleteRow',Rowindex);
+	
+	var del=  $('#datagrid_mx').datagrid('getRowIndex',Row.fdbs);
+	while (del>-1){
+			$('#datagrid_mx').datagrid('deleteRow',del);
+			del= $('#datagrid_mx').datagrid('getRowIndex',Row.fdbs);
+	}
+		
+}
+
+function mxSave(){
+if  (endEditing()){
+	//先取得新增信息	
+	var Rows=$('#datagrid_dialog').datagrid('getRows');
+	var fdbs=$('#fdbs').combobox('getValue');
+	var returnobject=new Object();
+	var returnmap=new Map();
+	returnobject.fdbs=fdbs;
+	
+	if  (Rows.length>0) {
+		//清除旧信息
+		//fdbs设置id字段 idField:'fdbs'
+		var del=  $('#datagrid_mx').datagrid('getRowIndex',fdbs);
+		while (del>-1){
+			$('#datagrid_mx').datagrid('deleteRow',del);
+			del= $('#datagrid_mx').datagrid('getRowIndex',fdbs);
+		}
+		
+		var delhz=  $('#datagrid_hz').datagrid('getRowIndex',fdbs);
+		while (delhz>-1){
+			$('#datagrid_hz').datagrid('deleteRow',delhz);
+			delhz= $('#datagrid_hz').datagrid('getRowIndex',fdbs);
+		}
+		
+		$('#datagrid_hz').datagrid('appendRow',{
+			fdbs:fdbs,
+			brq: $('#brq').datebox('getValue'),
+			erq: $('#erq').datebox('getValue'),
+		});
+		
+		//console.log(del);
+		for(var i=0;i<Rows.length;i++){
+			console.log(Rows[i]);
+				
+			$('#datagrid_mx').datagrid('appendRow',{
+				itemid:Rows[i].itemid,
+				productname:Rows[i].productname,
+				productid:Rows[i].productid,
+				listprice:Rows[i].listprice,
+				attr1:Rows[i].attr1,				
+				fdbs:fdbs,
+				mx:'MX'
+			});
+			
+			if (i==0){
+			  returnobject.itemid=Rows[i].itemid;	
+			}
+			
+			if (Rows[i].productname=='Manx'){
+				returnobject.je1=Rows[i].listprice;
+			}else if(Rows[i].productname=='Koi'){
+				returnobject.je2=Rows[i].listprice;
+			}else{
+				returnobject.je3=Rows[i].listprice;
+			}
+									
+		}	
+		returnmap.set(fdbs,returnobject);
+		console.log(returnobject);
+		console.log(returnmap);
+		$('#dd').dialog('close');	
+	}	
+	
+}
+
+}
+
+function onSpDblClickCell(index, rowData){
+	if(editIndex!=undefined){
+		    console.log(rowData);
+			$('#dd1').dialog('close');
+			
+			var rows= $('#datagrid_dialog').datagrid('getRows');
+			var bool=false;
+			   for (var i=0;i<rows.length;i++){
+			   	   if (rows[i].productid==rowData.productid ){
+			   	   	 bool=true;  
+			   	   	 break;
+			   	   }   	
+			   }
+			if (!bool){
+				$('#datagrid_dialog').datagrid('updateRow',{index: editIndex,row: {productname:rowData.productname,productid:rowData.productid}});
+				//editIndex = $('#datagrid_dialog').datagrid('getRows').length-1;
+				$('#datagrid_dialog').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+			}else
+		    { alert('商品重复'); }
+	}																	
+	
+}
+
+function opMX(){
+	console.log("opMX");
+	
+	$('#dd').dialog('open');
+	$('#fdbs').combobox('reload', 'combobox_data1.json');
+	var dateboxs=$('#dd .easyui-datebox');	
+	for(var i=0;i<dateboxs.length;i++){
+		//日期初始值	
+		dateboxs.eq(i).datebox('setValue', getCurentDateStr());	
+		//不能选超过今天
+		dateboxs.eq(i).datebox('calendar').calendar({
+			validator : function(date){
+				var now = new Date();
+				var d1 = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+				return date <= d1;
+			}
+		});			
+	}
+	
+	$('#datagrid_dialog').datagrid('loadData',{total:0,rows:[]})
+	//加载已录入
+	$('#datagrid_dialog').datagrid('appendRow',{
+	itemid: 'EST-10',
+	productname:undefined,	
+	listprice: '',
+	attr1:'',
+	productid: undefined
+    });
+	$('#datagrid_dialog').datagrid('appendRow',{
+	itemid: 'EST-10',
+	productname:undefined,	
+	listprice:'',
+	attr1:'',
+	productid: undefined
+    });
+	
+	
+}
+function  onBeforeEdit(rowIndex, rowData){
+	/*if ((rowData.itemid!=undefined)&&(rowData.itemid!="")){
+		var ed = $('#dg').datagrid('getEditor', {index:1,field:'birthday'});
+		
+	}*/
+	
+}
+
+
+function  selectFD(){	
+	console.log('分店标识： ' + (fd_info.fdbs ? fd_info.fdbs : 'empty'));
+	
+}
+
+
+function endEditing(){
+	if (editIndex == undefined){return true}
+	if ($('#datagrid_dialog').datagrid('validateRow', editIndex)){
+		$('#datagrid_dialog').datagrid('endEdit', editIndex);
+		editIndex = undefined;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function  onClickRow2(index, rowData){
+
+if (editIndex != index){
+	if (endEditing()){
+		$('#datagrid_dialog').datagrid('selectRow', index)
+				.datagrid('beginEdit', index);									
+		editIndex = index;
+
+		//单元格Editor绑定事件 
+		//只有Editor type=text时可以绑定事件
+		var ed = $('#datagrid_dialog').datagrid('getEditor', {index:editIndex,field:'productname'});    
+		$(ed.target).off();//解绑事件 避免重复绑定
+	    $(ed.target).bind('keyup', function(event)
+	    {
+	        if (event.keyCode == 13)
+	        {
+	            console.log('当前值:'+$('#datagrid_dialog').datagrid('getRows')[editIndex]['productname'])   ; 
+	            console.log('编辑值:'+ ed.target.val())  ;  
+	            $('#dd1').dialog('open');
+	        }
+	    });
+	    
+	    
+	       
+	} else {
+		$('#datagrid_dialog').datagrid('selectRow', editIndex);
+	}
+}
+}
+
+function  onClickRow(rowIndex, rowData){	
+	console.log('onClickRow： ' +rowIndex+' '+rowData.fdbs );	
+	//过滤
+	var trlist=$('tr').filter(':contains("MX")')
+	trlist.hide();
+	trlist.filter(':contains("Item ID")').show();
+	trlist=trlist.filter(':contains("'+rowData.fdbs+'")');
+	for (var i=0;i<trlist.length;i++){
+		var tdarr=trlist.eq(i).find('td');
+		if (tdarr.eq(0).text()==rowData.fdbs){
+			trlist.eq(i).show();
+		}
+		
+	}   	
+}
+
+function getCurentDateStr()
+{ 
+	var now = new Date();
+    var year = now.getFullYear();       //年
+    var month = now.getMonth() + 1;     //月
+    var day = now.getDate();            //日
+    var clock = year + "-";
+    if(month < 10) clock += "0";       
+    clock += month + "-";
+    if(day < 10) clock += "0"; 
+    clock += day;
+    return clock; 
+}
+
+</script>
+	
+</html>

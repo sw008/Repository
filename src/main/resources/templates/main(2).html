@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>新增</title>
+<link rel="stylesheet" type="text/css" href="../static/js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../static/js/easyui/themes/icon.css">
+<script type="text/javascript" src="../static/js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../static/js/easyui/easyloader.js"></script>
+<script type="text/javascript" src="../static/js/easyui/locale/easyui-lang-zh_CN.js"></script> 
+
+<!--
+<script type="text/javascript" src="../static/js/easyui/datagrid-filter.js"></script>
+-->
+</head>
+<body>
+<div>
+	<div class="easyui-panel" style="padding:5px;margin-bottom:5px;border:1px solid #ccc">
+		<a id="linkbutton_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save',onClick:save">提交</a>
+		<a id="linkbutton_add" href="#" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add',onClick:opMX">添加</a>
+        <a href="#" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-cut',onClick:deletehz">删除</a>
+	</div>
+	<div style="height:10px"></div>
+	<div>
+		
+		<div style="margin-bottom:10px">
+			<label style="width:20%;height:25px">备注</label >
+			<input id="beizhu" class="easyui-textbox" data-options="prompt:'填写备注...'" style="width:80%;height:25px">
+		</div>
+
+		
+	</div>
+	
+	<div style="width:auto;height:auto;float:left">
+		<table id="datagrid_hz" class="easyui-datagrid" title="汇总" style="width:500px;height:500px;float:left"
+			data-options="singleSelect:true,collapsible:true,onClickRow:onClickRow,striped:true,idField:'fdbs'">
+		<thead>
+			<tr>				
+				<th data-options="field:'fdmch',width:100,halign:'center',editor:{type:'textbox',options:{editable:false}}">商场</th>
+				<th data-options="field:'bny',width:80,align:'center',halign:'center',editor:{type:'textbox',options:{editable:false}}">起始年月</th>
+				<th data-options="field:'eny',width:80,align:'center',halign:'center',editor:{type:'textbox',options:{editable:false}}">结束年月</th>
+			    <th data-options="field:'beizhu',width:200,align:'center',halign:'center',formatter:formattercolumn,editor:{type:'textbox',options:{editable:false}}">说明</th>
+			    <th data-options="field:'fdbs',width:80,editor:{type:'textbox',options:{editable:false}},hidden:true">fdbs</th>
+			</tr>
+		</thead>
+	   </table>
+	</div>	
+		<div style="width:auto;height:auto">
+		<table id="datagrid_mx" class="easyui-datagrid" title="明细" style="width:600px;height:500px;float: right"
+			data-options="singleSelect:true,collapsible:true,striped:true,idField:'fdbs'">
+		<thead>
+			<tr>	
+				<th rowspan="2" data-options="field:'fdbs',width:80,editor:{type:'textbox',options:{editable:false}},hidden:true">fdbs</th>
+				<th rowspan="2" data-options="field:'ny',width:80,halign:'center',editor:{type:'textbox',options:{editable:false}}">年月</th>
+				<th colspan="2">手机销量</th>
+			    <th colspan="2">毛利净值</th>
+		        <th colspan="2">当期纯利</th>
+			    
+			</tr>
+			<tr>
+			    <th data-options="field:'shls',width:80,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:0,editable:false}}">调整前</th>
+				<th data-options="field:'shle',width:80,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:0,editable:false}}">调整后</th>
+				<th data-options="field:'mljzs',width:80,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:0,editable:false}}">调整前</th>
+				<th data-options="field:'mljze',width:80,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:0,editable:false}}">调整后</th>
+				<th data-options="field:'dqcls',width:80,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:0,editable:false}}">调整前</th>
+				<th data-options="field:'dqcle',width:80,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:0,editable:false}}">调整后</th>
+			
+			</tr>
+		</thead>
+		</table>
+	
+	</div>
+	
+</div>
+
+<div id="dd" class="easyui-dialog" closed=true style="padding:5px;width:900px;height:600px;"
+			title="新增" iconCls="icon-add" toolbar="#dlg-toolbar" modal=true>
+		<div style="margin-bottom:10px">
+			<label>商场</label >
+            <input id="fdbs"  class="easyui-combobox" data-options="valueField:'fdbs',textField:'fdmch',method:'get'">
+			<label>查询年月</label>
+			<input id="cxrq" class="easyui-datebox" style="width:100px"  data-options="editable:false">			
+			<label>起始年月</label>
+			<input id="brq" class="easyui-datebox" style="width:100px"  data-options="editable:false">
+			<label>结束年月</label>
+			<input id="erq" class="easyui-datebox"   style="width:100px"  data-options="editable:false">
+		    <div style="height: 10px;"></div>
+		    <label>说明</label>
+		    <input id="beizhu" class="easyui-textbox"   style="width:700px" data-options="prompt:'填写说明...'" >
+		</div>
+		<div>
+		<div style="width:auto;height:auto;float:left">
+			<table id="datagrid_dialog_hz" class="easyui-datagrid" title="任务汇总"  style="width:600px;height:400px;float:left"
+			data-options="singleSelect:true,onClickRow:onClickRowRwhz">
+			</table>			
+		</div>	
+		
+		
+		<div style="width:auto;height:auto">
+			<table id="datagrid_dialog" class="easyui-datagrid" title="任务明细" style="width:250px;height:400px"
+			data-options="singleSelect:true,onClickRow:onClickRow2">
+			<thead>
+				<tr>
+					<th data-options="field:'item',hidden:true">item</th>	 
+					<th data-options="field:'ny',width:60,align:'right',halign:'center',formatter:formattercolumn">年月</th>				
+					<th data-options="field:'rwjs',width:60,align:'right',halign:'center',formatter:formattercolumn">任务计算</th>
+					<th data-options="field:'rw',width:60,align:'right',halign:'center',editor:{type:'numberbox',options:{precision:2,required:true}}">任务值</th>
+				    			
+					
+				</tr>
+			</thead>
+			</table>
+		</div>
+		
+		
+	
+	</div>
+</div>
+<div id="dlg-toolbar">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" data-options="onClick:mxSave">保存</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" data-options="onClick:refrw">刷新</a>
+</div>
+
+
+
+
+
+</body>
+<script>
+var fd_info=new Object();
+var editIndex = undefined;
+
+$(function(){
+    //$('#linkbutton_save').bind('click', selectFD);
+    //$('#linkbutton_add').bind('click', opMX);  	
+});
+
+function formattercolumn(value) {
+	//单元格 鼠标悬停 提示单元格的值
+         return "<span title='" + value + "'>" + value + "</span>";  
+    }
+
+function refrw(){
+	var cxrq=$('#dd #cxrq').datebox('getValue');
+	var nyd=cxrq.replace(/-/g,'/');
+	var date=new Date(nyd);
+	
+	console.log(date.getMonth());
+	
+	$('#datagrid_dialog_hz').datagrid({	
+		        url: 'datagrid_data1rw.json',
+		        method: 'get',
+				columns:[[
+					{field:'item',title:'项目',width:100,halign:'center'},
+					{field:'yue',title:date.getMonth()+1+'月',width:80,align:'right',halign:'center'},
+					{field:'yue1',title:date.getMonth()+'月',width:80,align:'right',halign:'center'},
+					{field:'yue2',title:date.getMonth()-1+'月',width:80,align:'right',halign:'center'},
+					{field:'yuej',title:'月均',width:80,align:'right',halign:'center'},
+					{field:'rwz',title:'月均任务值',width:80,align:'right',halign:'center'}
+				]]
+				});
+	
+	/*var dataarr=cxrq.split('-');
+	var year=parseInt(dataarr[0]) ;
+	var month;
+	//处理月份 类似07 
+	if (dataarr[1].indexOf('0')==0){
+		month= parseInt(dataarr[1].substring(1));		
+	}else{
+		month= parseInt(dataarr[1]);
+	}
+
+	console.log(year);
+	console.log(month);
+	//-1 0对应1月	
+	var date=new Date(year,month-1,1);
+	*/
+	
+}
+
+function save(){
+	var dj_info=new Object();
+	var hzlist=$('#datagrid_hz').datagrid('getRows');
+	var mxlist=$('#datagrid_mx').datagrid('getRows');
+	
+	if ((hzlist.length>0)&&(mxlist.length>0)){
+		//console(hzlist);
+		//console(mxlist);
+		dj_info.beizhu=$('#beizhu').text();
+		dj_info.hzlist=hzlist;
+		dj_info.mxlist=mxlist;
+		console.log(dj_info);
+	}
+	
+	
+}
+
+function deletehz(){
+	var Row=$('#datagrid_hz').datagrid('getSelected');
+	var Rowindex=$('#datagrid_hz').datagrid('getRowIndex',Row);
+	console.log(Row);	
+	$('#datagrid_hz').datagrid('deleteRow',Rowindex);
+	
+	var del=  $('#datagrid_mx').datagrid('getRowIndex',Row.fdbs);
+	while (del>-1){
+			$('#datagrid_mx').datagrid('deleteRow',del);
+			del= $('#datagrid_mx').datagrid('getRowIndex',Row.fdbs);
+	}
+		
+}
+
+function mxSave(){
+if  (endEditing()){
+	//先取得新增信息	
+	var Rows=$('#datagrid_dialog').datagrid('getRows');
+	var fdbs=$('#fdbs').combobox('getValue');
+	var fdmch=$('#fdmch').combobox('getText');
+	var returnobject;
+	var returnmap=new Map();
+	
+	
+	if  (Rows.length>0) {
+		//清除父页面旧信息
+		//fdbs设置id字段 idField:'fdbs'
+		var del=  $('#datagrid_mx').datagrid('getRowIndex',fdbs);
+		while (del>-1){
+			$('#datagrid_mx').datagrid('deleteRow',del);
+			del= $('#datagrid_mx').datagrid('getRowIndex',fdbs);
+		}
+		
+		var delhz=  $('#datagrid_hz').datagrid('getRowIndex',fdbs);
+		while (delhz>-1){
+			$('#datagrid_hz').datagrid('deleteRow',delhz);
+			delhz= $('#datagrid_hz').datagrid('getRowIndex',fdbs);
+		}
+				
+		//console.log(del);
+		for(var i=0;i<Rows.length;i++){
+			console.log(Rows[i]);
+			if (returnmap.has(Rows[i].ny)){
+				returnobject=returnmap.get(Rows[i].ny);
+			}else{
+				returnobject=new Object();
+			    returnobject.fdbs=fdbs;
+			}
+										
+			if (Rows[i].item.trim()=='手机数量'){
+				returnobject.rwz1=Rows[i].rwz;
+			}else if(Rows[i].item.trim()=='毛利净值'){
+				returnobject.rwz2=Rows[i].rwz;
+			}else if(Rows[i].item.trim()=='当期纯利'){
+				returnobject.rwz3=Rows[i].rwz;
+			}
+			console.log(returnobject);
+			returnmap.set(Rows[i].ny,returnobject);						
+		}	
+		console.log(returnmap);
+		
+		$('#datagrid_hz').datagrid('appendRow',{
+			fdbs:fdbs,
+			fdmch:fdmch,
+			bny: $('#dd #brq').datebox('getValue').substring(0,7),
+			eny: $('#dd #erq').datebox('getValue').substring(0,7),
+			beizhu:$('#dd #beizhu')
+		});
+						
+		returnmap.forEach(function(value,Key,map){
+			$('#datagrid_mx').datagrid('appendRow',{
+				fdbs:fdbs,
+				ny:Key,
+				shls:value.rwz1,
+				shle:value.rwz1,
+				mljzs:value.rwz2,
+				mljze:value.rwz2,
+				dqcls:value.rwz3,
+				dqcle:value.rwz3,				
+				mx:'MX'
+		    });}			
+		);
+		
+		$('#dd').dialog('close');	
+	}	
+	
+}
+
+}
+
+function onSpDblClickCell(index, rowData){
+	if(editIndex!=undefined){
+		    console.log(rowData);
+			$('#dd1').dialog('close');
+			
+			var rows= $('#datagrid_dialog').datagrid('getRows');
+			var bool=false;
+			   for (var i=0;i<rows.length;i++){
+			   	   if (rows[i].productid==rowData.productid ){
+			   	   	 bool=true;  
+			   	   	 break;
+			   	   }   	
+			   }
+			if (!bool){
+				$('#datagrid_dialog').datagrid('updateRow',{index: editIndex,row: {productname:rowData.productname,productid:rowData.productid}});
+				//editIndex = $('#datagrid_dialog').datagrid('getRows').length-1;
+				$('#datagrid_dialog').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+			}else
+		    { alert('商品重复'); }
+	}																	
+	
+}
+
+function opMX(){
+	console.log("opMX");
+	
+	$('#datagrid_dialog_hz').datagrid({				
+				columns:[[
+					{field:'item',title:'项目',width:100},
+					{field:'yue',title:'n月',width:80},
+					{field:'yue1',title:'n-1月',width:80,align:'right'},
+					{field:'yue2',title:'n-2月',width:80,align:'right'},
+					{field:'yuej',title:'月均',width:80},
+					{field:'rwz',title:'月均任务值',width:80,align:'center'}
+				]]
+				});
+				
+	
+	$('#dd').dialog('open');
+	$('#fdbs').combobox('reload', 'combobox_data1.json');
+	var dateboxs=$('#dd .easyui-datebox');	
+	for(var i=0;i<dateboxs.length;i++){
+		//日期初始值	
+		dateboxs.eq(i).datebox('setValue', getCurentDateStr());	
+		//不能选超过今天
+		dateboxs.eq(i).datebox('calendar').calendar({
+			validator : function(date){
+				var now = new Date();
+				var d1 = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+				return date <= d1;
+			}
+		});			
+	}
+	
+	$('#datagrid_dialog').datagrid('loadData',{total:0,rows:[]})
+	//加载已录入
+	$('#datagrid_dialog').datagrid('appendRow',{
+	ny: '2018-05',rwjs:40
+    });
+	$('#datagrid_dialog').datagrid('appendRow',{
+	ny: '2018-06',rwjs:20.5});
+	
+	
+}
+function  onBeforeEdit(rowIndex, rowData){
+	/*if ((rowData.itemid!=undefined)&&(rowData.itemid!="")){
+		var ed = $('#dg').datagrid('getEditor', {index:1,field:'birthday'});
+		
+	}*/
+	
+}
+
+
+function  selectFD(){	
+	console.log('分店标识： ' + (fd_info.fdbs ? fd_info.fdbs : 'empty'));
+	
+}
+
+
+function endEditing(){
+	if (editIndex == undefined){return true}
+	if ($('#datagrid_dialog').datagrid('validateRow', editIndex)){
+		$('#datagrid_dialog').datagrid('endEdit', editIndex);
+		editIndex = undefined;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function  onClickRow2(index, rowData){
+
+if (editIndex != index){
+	if (endEditing()){
+		$('#datagrid_dialog').datagrid('selectRow', index)
+				.datagrid('beginEdit', index);									
+		editIndex = index;	   	       
+	} else {
+		$('#datagrid_dialog').datagrid('selectRow', editIndex);
+	}
+}
+}
+
+function  onClickRow(rowIndex, rowData){	
+	console.log('onClickRow： ' +rowIndex+' '+rowData.fdbs );	
+	//过滤
+	var trlist=$('tr').filter(':contains("MX")')
+	trlist.hide();
+	trlist.filter(':contains("年月")').show();
+	trlist=trlist.filter(':contains("'+rowData.fdbs+'")');
+	for (var i=0;i<trlist.length;i++){
+		var tdarr=trlist.eq(i).find('td');
+		if (tdarr.eq(0).text()==rowData.fdbs){
+			trlist.eq(i).show();
+		}
+		
+	}   	
+}
+
+function  onClickRowRwhz(rowIndex, rowData){	
+	console.log('onClickRowRwhz： ' +rowIndex+' '+rowData.item );	
+	//过滤
+	var trlist=$('#datagrid_dialog_hz tr');
+	trlist.hide();
+	trlist.filter(':contains("年月")').show();
+	trlist=trlist.filter(':contains("'+rowData.item+'")');
+	//第一列
+	for (var i=0;i<trlist.length;i++){
+		var tdarr=trlist.eq(i).find('td');
+		if (tdarr.eq(0).text()==rowData.item){
+			trlist.eq(i).show();
+		}
+		
+	}   	
+}
+
+
+function getCurentDateStr()
+{ 
+	var now = new Date();
+    var year = now.getFullYear();       //年
+    var month = now.getMonth() + 1;     //月
+    var day = now.getDate();            //日
+    var clock = year + "-";
+    if(month < 10) clock += "0";       
+    clock += month + "-";
+    if(day < 10) clock += "0"; 
+    clock += day;
+    return clock; 
+}
+
+</script>
+	
+</html>

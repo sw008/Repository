@@ -1,0 +1,14 @@
+[{
+	"id":"F001",
+	"text":"安定门",
+	"selected":true,
+	"desc":"Write once, run anywhere"
+},{
+	"id":"F012",
+	"text":"工体",
+	"desc":"One of the programming languages designed for the Common Language Infrastructure"
+},{
+	"id":"F005",
+	"text":"劲松",
+	"desc":"A dynamic, reflective, general-purpose object-oriented programming language"
+}]

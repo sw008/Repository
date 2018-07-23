@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.UserMapper">
+
+
+<select id="login"  resultMap="user" >
+
+select c.dzyid,dzycode,dzyname,sexid,b.gangw,a.gwid 
+from zhiydoc c 
+join hr_bmzhygw a on c.dzyid=a.dzyid
+join gwdoc b on a.gwid=b.gwid
+where c.dzycode=#{dzycode,jdbcType=CHAR} 
+
+</select>
+ 
+ 
+ <resultMap type="User" id="user">
+   <id  property="dzyid" column="dzyid" />
+   <result property="dzycode" column="dzycode" />
+   <result property="dzyname" column="dzyname" />
+   <result property="sexid" column="sexid" />
+   <collection  property="gwlist"  javaType="ArrayList" ofType="Hrbmgw" >
+      <result property="gwid" column="gwid" />
+      <result property="gangw" column="gangw" />  
+   </collection>
+  <!--<collection property="gnlist"  column="dzyid" javaType="ArrayList" 
+    ofType="SysGN"  select="com.zoomflight.mapper.GnlistMapper.gnlistbydzyid"></collection>  --> 
+ </resultMap>
+ 
+ <insert id="insert">
+   insert into zhiydoc(dzyid,dzyname,dzycode,sexid)
+   values(#{dzyid,jdbcType=CHAR},'XXX',#{dzycode,jdbcType=CHAR},'男')
+ 
+ 
+ </insert>
+ 
+
+ </mapper>  
